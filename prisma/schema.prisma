@@ -1,0 +1,217 @@
+// Marketing Campaign Management System — Prisma schema
+// Tables in `public` schema with mcm_* names (visible in Prisma Console Studio).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL_DIRECT")
+  schemas   = ["public"]
+}
+
+/// Platform user accounts — Super Admin, Marketing Manager, Content Creator, Analyst
+model User {
+  id        String  @id
+  name      String
+  email     String  @unique
+  password  String
+  role      String
+  status    String  @default("active")
+  avatar    String?
+  createdAt String  @map("created_at")
+
+  @@map("mcm_users")
+  @@schema("public")
+}
+
+/// Marketing campaigns — budget, channels, lifecycle status
+model Campaign {
+  id          String @id
+  name        String
+  category    String
+  status      String
+  budget      Float
+  spent       Float  @default(0)
+  startDate   String @map("start_date")
+  endDate     String @map("end_date")
+  channels    Json
+  managerId   String @map("manager_id")
+  description String @default("")
+
+  @@map("mcm_campaigns")
+  @@schema("public")
+}
+
+/// Campaign content items — text, image, video, design
+model Content {
+  id            String  @id
+  title         String
+  type          String
+  campaignId    String  @map("campaign_id")
+  status        String
+  createdBy     String  @map("created_by")
+  scheduledDate String? @map("scheduled_date")
+  fileUrl       String? @map("file_url")
+
+  @@map("mcm_content_items")
+  @@schema("public")
+}
+
+/// Campaign category taxonomy
+model CampaignCategory {
+  id          String @id
+  name        String @unique
+  description String
+
+  @@map("mcm_campaign_categories")
+  @@schema("public")
+}
+
+/// In-app notifications
+model Notification {
+  id        String  @id
+  title     String
+  message   String
+  type      String
+  read      Boolean @default(false)
+  createdAt String  @map("created_at")
+
+  @@map("mcm_notifications")
+  @@schema("public")
+}
+
+/// System audit trail — registrations, CRUD, admin actions
+model AuditLog {
+  id        String @id
+  user      String
+  action    String
+  resource  String
+  timestamp String
+
+  @@map("mcm_audit_logs")
+  @@schema("public")
+}
+
+/// Campaign task assignments
+model Task {
+  id         String @id
+  title      String
+  campaignId String @map("campaign_id")
+  assigneeId String @map("assignee_id")
+  dueDate    String @map("due_date")
+  status     String
+
+  @@map("mcm_tasks")
+  @@schema("public")
+}
+
+/// Marketing strategies — channels and planning
+model Strategy {
+  id          String @id
+  name        String
+  description String
+  channels    Json
+  status      String
+
+  @@map("mcm_marketing_strategies")
+  @@schema("public")
+}
+
+/// Uploaded media assets
+model MediaFile {
+  id         String  @id
+  name       String
+  type       String
+  size       String
+  uploadedAt String  @map("uploaded_at")
+  uploadedBy String  @map("uploaded_by")
+  fileData   String? @map("file_data")
+
+  @@map("mcm_media_assets")
+  @@schema("public")
+}
+
+/// Design materials and templates
+model Design {
+  id        String  @id
+  name      String
+  template  String
+  fileName  String? @map("file_name")
+  fileType  String? @map("file_type")
+  savedAt   String  @map("saved_at")
+  createdBy String  @map("created_by")
+  status    String
+
+  @@map("mcm_design_assets")
+  @@schema("public")
+}
+
+/// Global system settings — single row (id: global)
+model SystemSetting {
+  id        String @id @default("global")
+  data      Json
+  updatedAt String @map("updated_at")
+
+  @@map("mcm_settings")
+  @@schema("public")
+}
+
+/// Campaign analytics metrics — computed from campaign data, stored in DB
+model CampaignMetric {
+  campaignId       String @id @map("campaign_id")
+  reach            Int
+  impressions      Int
+  clicks           Int
+  conversions      Int
+  ctr              Float
+  conversionRate   Float  @map("conversion_rate")
+  cpc              Float
+  cpm              Float
+  revenue          Float
+  roi              Int
+  performanceScore Int    @map("performance_score")
+  updatedAt        String @map("updated_at")
+
+  @@map("mcm_campaign_metrics")
+  @@schema("public")
+}
+
+/// Design template catalog
+model DesignTemplate {
+  id       String @id
+  name     String
+  size     String
+  category String
+
+  @@map("mcm_design_templates")
+  @@schema("public")
+}
+
+/// Per-user UI preferences (dashboard widgets, etc.)
+model UserPreference {
+  userId    String @id @map("user_id")
+  data      Json
+  updatedAt String @map("updated_at")
+
+  @@map("mcm_user_preferences")
+  @@schema("public")
+}
+
+/// Export and report generation history
+model ExportRecord {
+  id          String @id
+  kind        String
+  dataset     String @default("")
+  format      String
+  dateRange   String @default("") @map("date_range")
+  summary     String
+  recordCount Int    @map("record_count")
+  createdBy   String @map("created_by")
+  createdAt   String @map("created_at")
+
+  @@map("mcm_export_records")
+  @@schema("public")
+}

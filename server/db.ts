@@ -1,4 +1,4 @@
-import type { Campaign, CampaignCategory } from '../src/types';
+import type { CampaignCategory } from '../src/types';
 import {
   SEED_CAMPAIGNS,
   SEED_CONTENT,
@@ -16,7 +16,7 @@ import { prisma } from './prisma';
 import {
   computeMetricsForCampaign,
   DEFAULT_SYSTEM_SETTINGS,
-  DEFAULT_DASHBOARD_PREFERENCES,
+  type CampaignLike,
   type SystemSettingsData,
 } from './metrics';
 
@@ -28,7 +28,10 @@ const SEED_USERS = [
   { id: '5', name: 'John Doe', email: 'john@company.com', role: 'content-creator', status: 'inactive', createdAt: '2024-04-01' },
 ];
 
-export function withCategoryCounts(categories: CampaignCategory[], campaigns: Campaign[]): CampaignCategory[] {
+export function withCategoryCounts(
+  categories: CampaignCategory[],
+  campaigns: Array<{ category: string }>
+): CampaignCategory[] {
   return categories.map((cat) => ({
     ...cat,
     campaignCount: campaigns.filter((c) => c.category === cat.name).length,
@@ -49,7 +52,7 @@ export async function ensureSystemSettings(): Promise<SystemSettingsData> {
   return created.data as SystemSettingsData;
 }
 
-export async function upsertCampaignMetrics(campaign: Campaign) {
+export async function upsertCampaignMetrics(campaign: CampaignLike) {
   const m = computeMetricsForCampaign(campaign);
   const updatedAt = new Date().toISOString();
   await prisma.campaignMetric.upsert({
@@ -70,7 +73,13 @@ export async function ensureDesignTemplates() {
 export async function ensureCampaignMetrics() {
   const campaigns = await prisma.campaign.findMany();
   for (const c of campaigns) {
-    const mapped = { ...c, channels: c.channels as string[] };
+    const mapped: CampaignLike = {
+      id: c.id,
+      spent: c.spent,
+      budget: c.budget,
+      channels: c.channels as string[],
+      status: c.status,
+    };
     const exists = await prisma.campaignMetric.findUnique({ where: { campaignId: c.id } });
     if (!exists) await upsertCampaignMetrics(mapped);
   }

@@ -1,9 +1,9 @@
 import express from 'express';
-import cors from 'cors';
+import { Prisma } from '@prisma/client';
 import { prisma } from './prisma';
 import { addAuditLog, buildSyncPayload, seedDatabase, withCategoryCounts, upsertCampaignMetrics } from './db';
 import { DEFAULT_SYSTEM_SETTINGS, DEFAULT_DASHBOARD_PREFERENCES, type SystemSettingsData } from './metrics';
-import type { UserRole } from '../src/types';
+import type { DashboardPreferences, UserRole } from '../src/types';
 
 const DEMO_ROLE_ORDER: UserRole[] = ['super-admin', 'marketing-manager', 'content-creator', 'marketing-analyst'];
 
@@ -227,7 +227,10 @@ router.post('/categories', async (req, res) => {
   });
   await addAuditLog(actor ?? 'System', 'Created category', created.name);
   const campaigns = await prisma.campaign.findMany();
-  const [mapped] = withCategoryCounts([{ ...created, campaignCount: 0 }], campaigns.map((c) => ({ ...c, channels: c.channels as string[] })));
+  const [mapped] = withCategoryCounts(
+    [{ ...created, campaignCount: 0 }],
+    campaigns.map((c) => ({ category: c.category }))
+  );
   res.status(201).json(mapped);
 });
 
@@ -374,13 +377,27 @@ router.patch('/settings', async (req, res) => {
 
 // User preferences
 router.patch('/preferences/:userId', async (req, res) => {
-  const { data } = req.body as { data: Record<string, unknown> };
+  const { data } = req.body as { data: Partial<DashboardPreferences> };
   const existing = await prisma.userPreference.findUnique({ where: { userId: req.params.userId } });
-  const merged = { ...(existing?.data as object ?? DEFAULT_DASHBOARD_PREFERENCES), ...data };
+  const existingPrefs = (existing?.data ?? DEFAULT_DASHBOARD_PREFERENCES) as unknown as DashboardPreferences;
+  const merged: DashboardPreferences = {
+    dashboardWidgets: {
+      ...existingPrefs.dashboardWidgets,
+      ...(data.dashboardWidgets ?? {}),
+    },
+  };
+  const jsonData = merged as unknown as Prisma.InputJsonValue;
   const updated = await prisma.userPreference.upsert({
     where: { userId: req.params.userId },
-    create: { userId: req.params.userId, data: merged, updatedAt: new Date().toISOString() },
-    update: { data: merged, updatedAt: new Date().toISOString() },
+    create: {
+      userId: req.params.userId,
+      data: jsonData,
+      updatedAt: new Date().toISOString(),
+    },
+    update: {
+      data: jsonData,
+      updatedAt: new Date().toISOString(),
+    },
   });
   res.json({ userId: updated.userId, data: updated.data, updatedAt: updated.updatedAt });
 });

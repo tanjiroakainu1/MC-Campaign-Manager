@@ -1,5 +1,8 @@
 import type { Campaign } from '../src/types';
 
+/** Prisma rows store status as string; metrics only need these fields. */
+export type CampaignLike = Pick<Campaign, 'id' | 'spent' | 'budget' | 'channels'> & { status: string };
+
 export interface CampaignMetricData {
   campaignId: string;
   reach: number;
@@ -15,7 +18,7 @@ export interface CampaignMetricData {
   performanceScore: number;
 }
 
-export function computeMetricsForCampaign(campaign: Campaign): CampaignMetricData {
+export function computeMetricsForCampaign(campaign: CampaignLike): CampaignMetricData {
   const reach = Math.round(campaign.spent * 3.85 + campaign.budget * 0.12);
   const impressions = Math.round(reach * 2.7);
   const clicks = Math.round(reach * 0.1);

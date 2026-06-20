@@ -102,7 +102,25 @@ All mutations go through the API → Prisma. Session only is stored locally (web
 | `npm run server` | Express API only |
 | `npm run client` | Vite only |
 | `npm run db:studio` | Prisma Studio |
-| `npm run build` | Production web build |
+| `npm run build` | Production web build (Vite → `dist/`) |
+| `npm start` | Production API + static web (`NODE_ENV=production`) |
+| `npm run db:deploy` | Apply migrations (Prisma Platform / production) |
+
+## Prisma Platform deploy
+
+The app is configured in `prisma.compute.ts` (Bun + Express entry `server/index.ts`, Vite build → `dist/`).
+
+**Required env vars in Prisma Console → Environment variables:**
+
+| Variable | Value |
+|----------|-------|
+| `DATABASE_URL` | Pooled connection (`pooled.db.prisma.io`) |
+| `DATABASE_URL_DIRECT` | Direct connection (`db.prisma.io`) |
+| `PORT` | `3001` (or platform-assigned port) |
+| `HOST` | `0.0.0.0` |
+| `NODE_ENV` | `production` |
+
+Build deps (`vite`, `tailwindcss`, etc.) are in `dependencies` so production installs can run `npm run build`.
 
 ## Project structure
 

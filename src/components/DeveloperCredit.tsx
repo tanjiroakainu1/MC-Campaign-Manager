@@ -68,16 +68,15 @@ export default function DeveloperCredit({ variant = 'inline', className = '' }: 
   if (variant === 'footer-dark') {
     return (
       <div className={`dev-credit-footer-dark ${className}`}>
-        <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-4">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500 to-diamond-400 text-xs font-black text-white shadow-glow-sm">
+        <div className="flex items-center justify-center gap-2 sm:justify-start sm:gap-2.5">
+          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-brand-500 to-diamond-400 text-[10px] font-black text-white shadow-glow-sm">
             {DEVELOPER.initials}
           </div>
-          <div className="text-center sm:text-left">
-            <p className="text-sm font-bold text-white">
-              Crafted by <span className="dev-name-glow">{DEVELOPER.name}</span>
-            </p>
-            <p className="text-xs font-semibold text-brand-200">{DEVELOPER.role} · v{DEVELOPER.version}</p>
-          </div>
+          <p className="text-xs font-semibold text-white sm:text-sm">
+            <span className="text-brand-200">by</span>{' '}
+            <span className="dev-name-glow">{DEVELOPER.name}</span>
+            <span className="hidden text-brand-300 sm:inline"> · v{DEVELOPER.version}</span>
+          </p>
         </div>
       </div>
     );

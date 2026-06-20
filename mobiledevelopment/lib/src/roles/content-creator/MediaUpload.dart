@@ -54,7 +54,7 @@ class _MediaUploadState extends State<MediaUpload> {
     await dataStore.addMedia({
       'name': file.name,
       'type': file.extension == 'mp4' ? 'video' : 'image',
-      'size': '${((file.size ?? 0) / 1024).toStringAsFixed(1)} KB',
+      'size': '${(file.size / 1024).toStringAsFixed(1)} KB',
       'uploadedAt': DateTime.now().toIso8601String().split('T').first,
       'uploadedBy': user.id,
     }, user.name);

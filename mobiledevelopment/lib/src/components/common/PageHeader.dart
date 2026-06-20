@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../styles/theme.dart';
 import '../../utils/responsive.dart';
 
 class PageHeader extends StatelessWidget {

@@ -54,15 +54,17 @@ class DeveloperCredit extends StatelessWidget {
       case DeveloperCreditVariant.footerDark:
         return Row(
           mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _avatar(initials, size: 36),
-            const SizedBox(width: 12),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Crafted by $name', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-                Text('$role · v$version', style: const TextStyle(fontSize: 12, color: AppColors.brand200)),
-              ],
+            _avatar(initials, size: 24, fontSize: 10),
+            const SizedBox(width: 8),
+            Flexible(
+              child: Text(
+                'by $name · v$version',
+                style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.white),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
             ),
           ],
         );

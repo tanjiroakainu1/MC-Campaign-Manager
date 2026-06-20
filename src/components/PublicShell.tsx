@@ -100,20 +100,15 @@ export default function PublicShell({ children, active = 'home', showFooter = tr
 
       {showFooter && (
         <footer className="safe-bottom relative border-t border-white/10 bg-brand-950/40 backdrop-blur-sm">
-          <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-            <div className="flex flex-col items-center justify-between gap-6 text-center lg:flex-row lg:text-left">
-              <div className="flex items-center gap-2.5">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 text-xs font-bold text-white">
-                  MC
-                </div>
-                <p className="text-sm text-brand-200">
-                  Marketing Campaign Management System
-                </p>
-              </div>
+          <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 lg:px-8">
+            <div className="flex flex-col items-center gap-2 text-center sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:text-left">
+              <p className="text-xs font-semibold text-brand-200">
+                <span className="font-bold text-white">MC</span> Campaign Manager
+              </p>
 
               <DeveloperCredit variant="footer-dark" />
 
-              <div className="flex flex-wrap items-center justify-center gap-3 text-sm sm:gap-4">
+              <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs">
                 <Link to="/login" className="font-semibold text-brand-100 transition hover:text-white">
                   Sign In
                 </Link>

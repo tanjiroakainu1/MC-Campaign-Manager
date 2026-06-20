@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 import '../components/DeveloperCredit.dart';
 import '../components/PublicShell.dart';
 import '../config/publicContent.dart';
@@ -251,16 +250,25 @@ class _HeroStat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = context.isMobile ? 120.0 : 140.0;
-    return Container(
+    final horizontalPad = context.pagePadding.horizontal;
+    final width = context.isMobile
+        ? ((context.screenWidth - horizontalPad - 12) / 2).clamp(100.0, 160.0)
+        : 140.0;
+    return SizedBox(
       width: width,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(16), border: Border.all(color: Colors.white24)),
-      child: Column(
-        children: [
-          Text(value, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white)),
-          Text(label, textAlign: TextAlign.center, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.brand200)),
-        ],
+      child: Container(
+        padding: EdgeInsets.all(context.isMobile ? 12 : 16),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.white24),
+        ),
+        child: Column(
+          children: [
+            Text(value, style: TextStyle(fontSize: context.isMobile ? 22 : 28, fontWeight: FontWeight.bold, color: Colors.white)),
+            Text(label, textAlign: TextAlign.center, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.brand200)),
+          ],
+        ),
       ),
     );
   }

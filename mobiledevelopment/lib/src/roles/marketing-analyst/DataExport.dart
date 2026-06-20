@@ -47,7 +47,6 @@ class _DataExportState extends State<DataExport> {
       'media': dataStore.getMedia().length,
       'audit': dataStore.getAuditLogs().length,
     };
-    final datasetEntries = datasets.entries.toList();
     return AppScreen(children: [
       const PageHeader(title: 'Export Data', description: 'Export datasets — records stored in Prisma'),
       AppCard(title: 'Export Configuration', child: FormSection(children: [

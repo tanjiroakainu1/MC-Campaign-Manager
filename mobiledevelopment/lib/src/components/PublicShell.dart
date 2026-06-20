@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'DeveloperCredit.dart';
+import '../config/developer.dart';
 import '../styles/theme.dart';
 import '../utils/responsive.dart';
 
@@ -107,29 +108,70 @@ class _PublicShellState extends State<PublicShell> {
   }
 
   Widget _buildFooter(BuildContext context) {
+    final compact = context.isMobile;
+    final version = developer['version'] as String;
+    final name = developer['name'] as String;
+
     return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(color: AppColors.brand900.withValues(alpha: 0.4), border: const Border(top: BorderSide(color: Colors.white10))),
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: compact ? 6 : 8),
+      decoration: BoxDecoration(
+        color: AppColors.brand900.withValues(alpha: 0.4),
+        border: const Border(top: BorderSide(color: Colors.white10)),
+      ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          Wrap(
+            alignment: WrapAlignment.center,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 6,
+            runSpacing: 4,
             children: [
-              _logo(size: 32),
-              const SizedBox(width: 8),
-              const Text('Marketing Campaign Management System', style: TextStyle(color: AppColors.brand200, fontSize: 13)),
+              _logo(size: compact ? 20 : 24),
+              Text(
+                compact ? 'MC Campaign Manager' : 'Marketing Campaign Management System',
+                style: TextStyle(color: AppColors.brand200, fontSize: compact ? 11 : 12),
+                textAlign: TextAlign.center,
+              ),
             ],
           ),
-          const SizedBox(height: 16),
-          const DeveloperCredit(variant: DeveloperCreditVariant.footerDark),
-          const SizedBox(height: 16),
+          const SizedBox(height: 4),
           Wrap(
-            spacing: 16,
             alignment: WrapAlignment.center,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: compact ? 4 : 8,
+            runSpacing: 2,
             children: [
-              TextButton(onPressed: () => context.go('/login'), child: const Text('Sign In')),
-              TextButton(onPressed: () => context.go('/register'), child: const Text('Register')),
-              const Text('4 Roles · One Platform', style: TextStyle(color: AppColors.diamond400)),
+              if (compact)
+                Text(
+                  '$name · v$version',
+                  style: const TextStyle(fontSize: 10, color: AppColors.brand200, fontWeight: FontWeight.w600),
+                )
+              else
+                const DeveloperCredit(variant: DeveloperCreditVariant.footerDark),
+              TextButton(
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 0),
+                  minimumSize: Size.zero,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                onPressed: () => context.go('/login'),
+                child: Text('Sign In', style: TextStyle(fontSize: compact ? 11 : 12, color: AppColors.brand100)),
+              ),
+              TextButton(
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 0),
+                  minimumSize: Size.zero,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                onPressed: () => context.go('/register'),
+                child: Text('Register', style: TextStyle(fontSize: compact ? 11 : 12, color: AppColors.brand100)),
+              ),
+              Text(
+                '4 Roles · One Platform',
+                style: TextStyle(color: AppColors.diamond400, fontSize: compact ? 10 : 11),
+              ),
             ],
           ),
         ],

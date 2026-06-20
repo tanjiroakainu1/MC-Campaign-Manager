@@ -77,9 +77,9 @@ flutter run --dart-define=API_BASE=http://YOUR_LOCAL_IP:3001/api
 
 **Release APK (Android + Prisma sync):**
 ```bash
-cd mobiledevelopment
-./scripts/build_apk.sh http://YOUR_LOCAL_IP:3001
-# Output: mobiledevelopment/build/app/outputs/flutter-apk/app-release.apk
+npm run apk:publish
+# Copies APK to public/downloads/ — downloadable from home page at /downloads/campaign-manager.apk
+# Or: cd mobiledevelopment && ./scripts/build_apk.sh https://mc-campaign-manager.vercel.app
 ```
 Phone must reach the Express API (same Wi‑Fi for LAN, or deploy API publicly).
 

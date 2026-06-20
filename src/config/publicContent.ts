@@ -85,6 +85,13 @@ export const PLATFORM_FEATURES = [
   },
 ];
 
+export const MOBILE_APP_HIGHLIGHTS = [
+  'Same Prisma database as the web app — live sync every 20 seconds',
+  'All four role dashboards: Manager, Creator, Analyst, and Super Admin',
+  'Works online against the deployed API — no manual setup required',
+  'Install the APK on any Android phone or emulator to test immediately',
+];
+
 export function getRoleFeatures(role: UserRole, limit = 4): string[] {
   return ROLE_NAV[role].slice(0, limit).map((item) => item.label);
 }

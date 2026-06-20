@@ -8,8 +8,10 @@ import {
   GET_STARTED_STEPS,
   CAMPAIGN_LIFECYCLE,
   PLATFORM_FEATURES,
+  MOBILE_APP_HIGHLIGHTS,
   getRoleFeatures,
 } from '../config/publicContent';
+import { MOBILE_APP } from '../config/mobileApp';
 import type { UserRole } from '../types';
 
 const ROLE_ICONS: Record<UserRole, React.ReactNode> = {
@@ -95,6 +97,16 @@ export default function Home() {
               <Link to="/login" className="btn-glass w-full min-w-[180px] sm:w-auto">
                 Sign In to Dashboard
               </Link>
+              <a
+                href={MOBILE_APP.apkUrl}
+                download={MOBILE_APP.fileName}
+                className="inline-flex w-full min-w-[180px] items-center justify-center gap-2 rounded-xl border-2 border-diamond-400/60 bg-diamond-500/20 px-5 py-3 text-sm font-bold text-white backdrop-blur-sm transition hover:bg-diamond-500/30 sm:w-auto"
+              >
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+                Download Android APK
+              </a>
             </div>
 
             <div className="animate-slide-up mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4" style={{ animationDelay: '160ms' }}>
@@ -280,6 +292,75 @@ export default function Home() {
       </section>
 
       <DeveloperCredit variant="hero" />
+
+      {/* Android APK */}
+      <section id="android-app" className="section-padding scroll-mt-20 border-t border-white/10">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-12">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-brand-200">Mobile App</p>
+              <h2 className="text-balance mt-2 text-3xl font-bold text-white sm:text-4xl">
+                Test on Android
+              </h2>
+              <p className="mt-4 text-sm leading-relaxed text-brand-100 sm:text-base">
+                Download the release APK and install it on your phone or Android emulator. The app syncs
+                with the same Prisma database as this website — create a campaign on web and see it on
+                mobile within seconds.
+              </p>
+              <ul className="mt-6 space-y-3">
+                {MOBILE_APP_HIGHLIGHTS.map((item) => (
+                  <li key={item} className="flex items-start gap-3 text-sm text-brand-100">
+                    <svg className="mt-0.5 h-5 w-5 shrink-0 text-diamond-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                    </svg>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="animate-scale-in rounded-3xl border border-white/20 bg-white/95 p-6 shadow-glow sm:p-8">
+              <div className="flex items-center gap-4">
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-diamond-500 text-white shadow-md">
+                  <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-slate-900">{MOBILE_APP.label}</h3>
+                  <p className="text-sm text-slate-500">v{MOBILE_APP.version} · {MOBILE_APP.sizeHint}</p>
+                </div>
+              </div>
+
+              <div className="mt-6 space-y-3 rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm">
+                <div className="flex justify-between gap-4">
+                  <span className="font-semibold text-slate-500">Package</span>
+                  <span className="truncate text-right font-mono text-xs text-slate-700">{MOBILE_APP.packageId}</span>
+                </div>
+                <div className="flex justify-between gap-4">
+                  <span className="font-semibold text-slate-500">API</span>
+                  <span className="truncate text-right font-mono text-xs text-slate-700">{MOBILE_APP.apiUrl}</span>
+                </div>
+              </div>
+
+              <a
+                href={MOBILE_APP.apkUrl}
+                download={MOBILE_APP.fileName}
+                className="btn-primary mt-6 flex w-full items-center justify-center gap-2"
+              >
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download APK for Android
+              </a>
+
+              <p className="mt-4 text-center text-xs leading-relaxed text-slate-500">
+                On emulator: open this site in Chrome, tap download, then allow installs from unknown sources if prompted.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* CTA */}
       <section className="section-padding pb-20 pt-8 sm:pb-24">

@@ -1,22 +1,15 @@
-import 'dotenv/config';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import express from 'express';
-import cors from 'cors';
-import apiRoutes from './routes';
+import app from './app';
 import { seedDatabase } from './db';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const app = express();
 const PORT = Number(process.env.PORT) || 3001;
 const HOST = process.env.HOST || '0.0.0.0';
 const isProduction = process.env.NODE_ENV === 'production';
 
-app.use(cors());
-app.use(express.json({ limit: '4mb' }));
-app.use('/api', apiRoutes);
-
-if (isProduction) {
+if (isProduction && !process.env.VERCEL) {
   const distPath = path.join(__dirname, '../dist');
   app.use(express.static(distPath));
   app.get('*', (req, res, next) => {

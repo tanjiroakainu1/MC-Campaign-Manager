@@ -103,6 +103,7 @@ All mutations go through the API → Prisma. Session only is stored locally (web
 | `npm run client` | Vite only |
 | `npm run db:studio` | Prisma Studio |
 | `npm run build` | Production web build (Vite → `dist/`) |
+| `npm run vercel-build` | Vercel: generate + migrate + Vite build |
 | `npm start` | Production API + static web (`NODE_ENV=production`) |
 | `npm run db:deploy` | Apply migrations (Prisma Platform / production) |
 
@@ -121,6 +122,24 @@ The app is configured in `prisma.compute.ts` (Bun + Express entry `server/index.
 | `NODE_ENV` | `production` |
 
 Build deps (`vite`, `tailwindcss`, etc.) are in `dependencies` so production installs can run `npm run build`.
+
+## Vercel deploy
+
+`vercel.json` serves the Vite app from `dist/` and routes `/api/*` to the Express serverless function (`api/index.ts`).
+
+1. Import repo: https://github.com/tanjiroakainu1/MC-Campaign-Manager
+2. Framework preset: **Other** (uses `vercel.json`)
+3. Add environment variables:
+
+| Variable | Value |
+|----------|-------|
+| `DATABASE_URL` | Pooled Prisma Postgres URL |
+| `DATABASE_URL_DIRECT` | Direct URL (for `prisma migrate deploy` in build) |
+| `NODE_ENV` | `production` |
+
+4. Deploy — build runs `npm run vercel-build` (generate → migrate → vite build).
+
+After deploy, test `https://your-app.vercel.app/api/health` and open the site root for the web UI. Mobile APK: `./scripts/build_apk.sh https://your-app.vercel.app`
 
 ## Project structure
 

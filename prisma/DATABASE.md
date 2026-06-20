@@ -30,9 +30,12 @@ Connection strings are in `.env` and `.env.example`.
 
 ```bash
 npm run db:generate
-npm run db:push
+npm run db:push          # local dev schema sync
+npm run db:deploy        # production migrations (Prisma Platform)
 npm run db:seed
 npm run db:studio
 ```
+
+Production uses `prisma/migrations/20250620180000_baseline_public_mcm` — the live DB was baselined with `prisma migrate resolve --applied`.
 
 In Prisma Console, keep **schema: public** — you should see all `mcm_*` tables.

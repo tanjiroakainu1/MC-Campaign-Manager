@@ -1,5 +1,12 @@
 import 'dotenv/config';
-import { defineConfig, env } from 'prisma/config';
+import { defineConfig } from 'prisma/config';
+
+// Placeholder for `prisma generate` in CI/Compute builds when DB env vars are not injected yet.
+const buildDatasourceUrl =
+  process.env.DATABASE_URL ??
+  'postgresql://build:build@localhost:5432/build?schema=public';
+const buildDirectUrl =
+  process.env.DATABASE_URL_DIRECT ?? buildDatasourceUrl;
 
 export default defineConfig({
   schema: 'prisma/schema.prisma',
@@ -8,7 +15,7 @@ export default defineConfig({
     seed: 'tsx prisma/seed.ts',
   },
   datasource: {
-    url: env('DATABASE_URL'),
-    directUrl: env('DATABASE_URL_DIRECT'),
+    url: buildDatasourceUrl,
+    directUrl: buildDirectUrl,
   },
 });

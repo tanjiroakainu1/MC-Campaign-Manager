@@ -10,5 +10,11 @@ export default defineComputeConfig({
       command: 'npm run build',
       outputDirectory: 'dist',
     },
+    env: {
+      vars: {
+        NODE_ENV: 'production',
+        HOST: '0.0.0.0',
+      },
+    },
   },
 });
